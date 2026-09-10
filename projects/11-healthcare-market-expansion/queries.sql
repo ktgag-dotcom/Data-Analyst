@@ -1,0 +1,1 @@
+SELECT market, PERCENT_RANK() OVER(ORDER BY population_growth) growth_pct, PERCENT_RANK() OVER(ORDER BY disease_burden) burden_pct, PERCENT_RANK() OVER(ORDER BY access_gap) access_pct FROM markets;

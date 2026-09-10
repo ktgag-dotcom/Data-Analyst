@@ -1,0 +1,6 @@
+PROGRAM: Pharmaceutical Sales-Force Effectiveness
+DATA: fully synthetic; random seed=42 makes generation reproducible.
+LOGIC: generate HCP baseline Rx -> generate call counts -> impose diminishing-response curve -> add noise -> calculate Rx change -> bin call frequency -> compare marginal response.
+VARIABLES: calls=rep interactions; baseline_rx=pre-period prescriptions; post_rx=post-period prescriptions; rx_change=change; call_band=frequency group; territory=synthetic geography.
+METHODS: Poisson distribution for count data; Gamma distribution for positive skewed baseline; exponential saturation curve 45*(1-exp(-0.35*calls)) to model diminishing returns; grouped mean/median comparisons. Bootstrap confidence intervals are a recommended extension. This is association/simulation, not causal proof. No bubble sort is used.
+LIMITATION: Synthetic response mechanism is deliberately simplified.

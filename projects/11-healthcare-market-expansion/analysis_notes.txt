@@ -1,0 +1,5 @@
+PROGRAM: Healthcare Market Expansion / Site Selection
+LOGIC: join market-level demographic/health/access data -> convert each metric to percentile rank -> apply transparent weights -> rank candidate markets -> rerun alternate-weight scenarios.
+VARIABLES: population_growth=demand growth; disease_burden=need proxy; access_gap=undersupply/access proxy; income=economic context; *_pct=percentile rank; market_score=weighted attractiveness score.
+METHODS: multi-source joins; percentile ranking; MCDA weighted score; scenario/sensitivity analysis. Percentile ranks make differently scaled variables comparable. Weights are assumptions, not official healthcare standards. No bubble sort is used.
+LIMITATIONS: ecological market data do not represent individual patients; site feasibility also requires real estate, regulation, competition and travel-time analysis.

@@ -1,0 +1,1 @@
+SELECT master_hcp_id, COUNT(*) source_records, COUNT(DISTINCT source) source_count FROM hcp_crosswalk GROUP BY master_hcp_id ORDER BY source_count DESC, source_records DESC;
