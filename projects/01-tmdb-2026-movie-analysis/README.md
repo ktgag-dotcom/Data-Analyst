@@ -1,4 +1,4 @@
-# TMDB 2026 Movie Analysis
+# 2026 Movie Analysis
 
 Portfolio analysis of 2026 films using TMDB data. The project cleans movie metadata, derives ROI and popularity metrics, compares genres, and produces decision-oriented summaries.
 
