@@ -1,0 +1,1 @@
+WITH s AS (SELECT *, LAG(arrival_delay) OVER(PARTITION BY tail_num ORDER BY scheduled_departure) previous_arrival_delay FROM flights) SELECT origin, COUNT(*) flights, AVG(CASE WHEN previous_arrival_delay>15 AND departure_delay>15 THEN 1.0 ELSE 0 END) propagation_rate FROM s GROUP BY origin ORDER BY propagation_rate DESC;

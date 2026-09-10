@@ -1,0 +1,5 @@
+PROGRAM: Streaming Content Portfolio / Renewal Decision
+LOGIC: ingest title metrics -> min-max normalize unlike scales -> apply explicit business weights -> sum weighted components -> segment score distribution -> rank titles.
+VARIABLES: engagement=usage signal; rating=quality signal; completion_rate=share finishing title; cost_efficiency=engagement relative to cost; *_norm=0-1 normalized values; content_value=weighted score; decision=portfolio tier.
+METHODS: Multi-Criteria Decision Analysis (MCDA); min-max normalization; weighted scoring; quantile segmentation (qcut); sensitivity analysis should rerun rankings under alternate weights. No bubble sort: ranking uses pandas optimized sort_values.
+CAUTION: weights are project assumptions. Score supports decisions; it does not prove causal value or predict renewal success.

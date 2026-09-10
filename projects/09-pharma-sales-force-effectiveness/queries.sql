@@ -1,0 +1,1 @@
+SELECT territory, calls, COUNT(*) hcps, AVG(post_rx-baseline_rx) avg_rx_change FROM hcp_calls GROUP BY territory,calls ORDER BY territory,calls;

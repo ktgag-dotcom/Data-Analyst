@@ -1,0 +1,1 @@
+SELECT genre, COUNT(*) movies, MEDIAN(revenue) median_revenue, MEDIAN((revenue-budget)/NULLIF(budget,0)) median_roi FROM movies GROUP BY genre ORDER BY median_roi DESC;

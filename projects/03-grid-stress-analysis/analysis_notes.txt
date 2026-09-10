@@ -1,0 +1,5 @@
+PROGRAM: Electricity Demand & Grid Stress
+LOGIC: sort hourly observations -> net load=demand-renewables -> 24-hour rolling mean/std -> standardized stress score -> flag unusually high net-load periods -> profile by hour.
+VARIABLES: demand_mw=system demand; renewable_mw=renewable output; net_load=residual demand; rolling_mean/rolling_std=local baseline; z_stress=standard deviations above baseline; stress_flag=exploratory threshold >2.
+METHODS: time-series rolling windows; z-score anomaly detection; temporal feature extraction; group aggregation. Threshold 2 is a project assumption, not an official grid emergency standard. No manual sorting algorithm such as bubble sort is used; chronological ordering uses pandas sort_values.
+LIMITATIONS: stress proxy omits transmission constraints, reserves, outages and market conditions.

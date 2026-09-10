@@ -1,0 +1,5 @@
+PROGRAM: Airline Delay Propagation Network
+LOGIC: order flights by aircraft tail and time -> use prior flight to create event sequence -> compare previous arrival delay with next departure delay -> flag propagated delays -> aggregate by airport.
+VARIABLES: tail_num=aircraft identifier; arrival_delay/departure_delay=minutes; previous_arrival_delay=lagged event; turn_delay_change=next departure minus prior arrival delay; propagated=both prior arrival and next departure exceed 15 minutes.
+METHODS: event sequencing; pandas groupby+shift equivalent to SQL LAG; conditional classification; airport aggregation. NetworkX can extend this into airport graph centrality, but core one-day analysis stays interpretable. The 15-minute threshold matches common on-time reporting convention but should be documented. No bubble sort is used; chronological sorting uses optimized dataframe sorting.
+CAUTION: observed propagation is not necessarily causal because weather/ATC can affect multiple flights.

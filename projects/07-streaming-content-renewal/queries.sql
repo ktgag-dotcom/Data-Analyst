@@ -1,0 +1,1 @@
+SELECT *, 0.35*engagement_norm+0.20*rating_norm+0.25*completion_norm+0.20*cost_efficiency_norm AS content_value, DENSE_RANK() OVER (ORDER BY 0.35*engagement_norm+0.20*rating_norm+0.25*completion_norm+0.20*cost_efficiency_norm DESC) AS portfolio_rank FROM titles;

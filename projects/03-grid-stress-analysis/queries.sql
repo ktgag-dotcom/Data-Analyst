@@ -1,0 +1,1 @@
+SELECT timestamp, demand_mw, renewable_mw, demand_mw-renewable_mw AS net_load, AVG(demand_mw-renewable_mw) OVER (ORDER BY timestamp ROWS BETWEEN 23 PRECEDING AND CURRENT ROW) AS rolling_24h FROM grid ORDER BY timestamp;

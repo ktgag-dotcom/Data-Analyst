@@ -1,0 +1,6 @@
+PROGRAM: TMDB 2026 Movie Analysis
+PURPOSE: Compare movie economics and audience signals across genres.
+LOGIC: load CSV -> coerce numeric fields -> remove invalid values -> calculate profit/ROI -> group by genre -> rank results -> visualize.
+KEY VARIABLES: df=dataframe; budget=production budget; revenue=reported revenue; profit=revenue-budget; roi=profit/budget; popularity=TMDB popularity; vote_average=user rating; summary=genre-level aggregation.
+METHODS: pandas read_csv for ingestion; to_numeric for validation; groupby/agg for aggregation; median instead of mean to reduce outlier influence; ROI for scale-normalized performance; sort_values for ranking. No bubble sort is used: pandas uses optimized internal sorting algorithms. Correlation can be added with Spearman correlation because financial variables are skewed.
+LIMITATION: TMDB budget/revenue fields can be missing or incomplete; ROI is undefined when budget is zero.

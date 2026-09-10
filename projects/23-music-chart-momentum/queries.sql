@@ -1,0 +1,1 @@
+WITH x AS (SELECT *, LAG(rank) OVER(PARTITION BY artist,song ORDER BY chart_date) previous_rank FROM charts) SELECT *, previous_rank-rank AS momentum FROM x ORDER BY artist,song,chart_date;

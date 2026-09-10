@@ -1,0 +1,5 @@
+PROGRAM: Customer 360 / Master Data Management
+LOGIC: load three sources -> concatenate with source lineage -> standardize names/emails/phones -> deterministic match hierarchy -> assign master ID -> create golden-record table -> create source-to-master crosswalk.
+VARIABLES: source=origin system; source_id=record ID in origin; name_clean/email_clean/phone_clean=standardized identifiers; match_key=best available deterministic identity key; master_hcp_id=unified entity ID; master=golden-record dataframe.
+METHODS: data standardization with regex; deterministic entity resolution (email -> phone -> normalized name+city); pandas factorize for stable grouping within a run; golden-record creation; crosswalk mapping. rapidfuzz `ratio` is imported for an extension where unmatched records receive fuzzy name similarity scores. Suggested fuzzy thresholds: >=90 auto-match, 75-89 manual review, <75 separate entity; these are PROJECT assumptions and must be validated. No bubble sort is used.
+IMPORTANT: Production MDM needs survivorship rules, persistent IDs, audit logs, blocking strategies, human review and stronger fuzzy matching than this one-day implementation.
