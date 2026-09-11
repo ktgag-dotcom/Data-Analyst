@@ -1,0 +1,73 @@
+US CITY TRANSPORTATION ACCESS AND COST ANALYSIS
+
+PROGRAM PURPOSE
+This project compares U.S. cities using transportation access, vehicle availability, walking, income, and housing-cost indicators. It also contains an optional cab-fare checker. If historical taxi data exists for a city, a user can enter the city, trip distance, and fare and compare the quoted cost with similar historical trips.
+
+PROGRAM LOGIC
+1. Load a prepared city-level dataset.
+2. Remove records missing required analytical fields.
+3. Convert median monthly rent to annual rent and divide it by median household income.
+4. Normalize transportation and affordability variables so they can be combined.
+5. Calculate three versions of the city score using different weights.
+6. Rank and classify cities.
+7. Export rankings and charts.
+8. If taxi trip data is available, compare a user's fare with historical trips of similar distance.
+
+IMPORTANT VARIABLES
+transit_pct: Percentage of commuters using public transportation.
+walk_pct: Percentage of commuters walking to work.
+no_vehicle_pct: Percentage of households with no vehicle available.
+median_gross_rent: Median monthly gross rent.
+median_household_income: Median annual household income.
+rent_income_ratio: Annual median rent divided by median household income.
+transit_score, walk_score, no_vehicle_score: Normalized 0-1 versions of transportation indicators.
+affordability_score: Reverse-normalized rent-income ratio, so a higher value represents better affordability.
+balanced_score: Main 0-100 composite score.
+transit_heavy_score: Alternative score that gives transportation more weight.
+budget_heavy_score: Alternative score that gives affordability more weight.
+fare_per_mile: Historical taxi fare divided by trip distance.
+
+METHODS USED
+
+Feature Engineering
+Why: Raw counts, dollars, and percentages do not directly answer the business question.
+How: The program creates rent_income_ratio, normalized component scores, composite scores, rankings, and fare-per-mile benchmarks from the source variables.
+
+Min-Max Normalization
+Why: Transit percentages, walking percentages, vehicle availability, and housing cost burden use different ranges. They need a common scale before they can be combined.
+How: Each component is transformed using (x - minimum) / (maximum - minimum), producing values between 0 and 1.
+
+Reverse Scaling
+Why: Lower housing-cost burden is desirable, while higher transit and walking values are desirable.
+How: The normalized rent-income ratio is subtracted from 1 so that all component scores have the same direction: higher is better.
+
+Composite Index / Weighted Scoring
+Why: No single variable measures whether a city is practical for car-free living.
+How: The balanced score combines transit (30%), no-vehicle households (25%), walking (20%), and affordability (25%). The weights are project assumptions rather than official government weights.
+
+Sensitivity Analysis
+Why: Composite rankings can change when subjective weights change.
+How: The program calculates balanced, transit-heavy, and budget-heavy scenarios. Comparing the resulting ranks shows whether a city's position is robust or highly dependent on the weighting choice.
+
+Percentile Ranking
+Why: A raw score is easier to interpret when compared with the rest of the dataset.
+How: pandas rank(pct=True) converts the balanced score into a relative percentile across cities.
+
+Distance-Band Matching
+Why: A short taxi ride should not be benchmarked directly against a very long ride because fixed fees and trip structure affect cost per mile.
+How: The cab checker selects historical trips within 20% of the entered mileage, with a minimum half-mile tolerance.
+
+Percentile-Based Benchmarking
+Why: Taxi fares can be skewed by unusual trips, tolls, surcharges, and other extremes, so an average alone can be misleading.
+How: The checker calculates the 25th, 50th, and 75th percentiles of fare per mile among comparable trips. A quoted rate below Q1 is labeled below the usual range, between Q1 and Q3 is within the usual range, and above Q3 is above the usual range.
+
+Minimum Sample Rule
+Why: A benchmark based on only a handful of trips would be unstable.
+How: The cab checker requires at least 30 comparable historical trips. Otherwise it reports insufficient data instead of presenting a potentially misleading comparison.
+
+SQL Aggregation and Window Functions
+Why: SQL provides a reproducible way to query rankings, summarize classifications, and compare cities within states.
+How: queries.sql uses GROUP BY and ranking window functions against the cleaned city-level table.
+
+LIMITATIONS
+The city score is an analytical framework, not an official livability measure. ACS commuting behavior is a proxy for transportation accessibility and does not capture every aspect of transit quality. Median rent divided by median income is a simplified affordability indicator. Taxi benchmarking depends on the availability and consistency of city-level taxi trip datasets. Fare definitions must be standardized before combining sources. Taxi results describe historical distributions and do not guarantee what a ride should legally cost. Airport fees, tolls, time-based charges, surge pricing, and local regulations can explain prices outside the usual range.
