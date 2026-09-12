@@ -1,0 +1,69 @@
+FEDERAL CONTRACT VENDOR CONCENTRATION ANALYSIS
+
+PROGRAM PURPOSE
+The program evaluates federal contract spending to determine whether agencies distribute obligations across many vendors or depend heavily on a small number of suppliers.
+
+PROGRAM LOGIC
+1. Load one fiscal year of federal contract award data.
+2. Validate recipient, agency, and obligated-amount fields.
+3. Remove missing records and non-positive obligations from the concentration calculation.
+4. Aggregate individual awards into total vendor spending within each agency.
+5. Divide each vendor's spending by total agency spending to calculate vendor share.
+6. Rank vendors within each agency and calculate cumulative spending share.
+7. Calculate HHI and Top-5 concentration for each agency.
+8. Classify concentration using project-defined analytical bands.
+9. Export summaries, a SQLite database, and charts.
+
+IMPORTANT VARIABLES
+obligated_amount: Contract dollars obligated in the source award records.
+recipient_name: Organization receiving the contract award.
+awarding_agency: Federal agency responsible for the award.
+vendor_spend: Sum of positive obligations for one vendor within one agency.
+vendor_share: Vendor spend divided by total analyzed agency spend.
+vendor_rank: Vendor's spending rank within its agency.
+cumulative_share: Running share of agency spending after vendors are sorted largest to smallest.
+share_squared: Squared vendor share used to calculate HHI.
+hhi: Sum of squared vendor shares within an agency.
+top5_share: Combined spending share of an agency's five largest vendors.
+vendor_count: Number of unique analyzed vendors within the agency.
+
+METHODS USED
+
+Data Cleaning
+Why: Financial exports can contain missing identifiers, nonnumeric values, zero obligations, and adjustments. Concentration calculations require consistent positive spending values.
+How: Obligated amount is converted to numeric, required identifiers are validated, and this exercise limits the concentration calculation to positive obligations. This choice is documented because excluding deobligations changes the interpretation from net obligations to positive-award concentration.
+
+Grouped Aggregation
+Why: Individual award transactions do not directly show the size of an agency-vendor relationship.
+How: Transactions are grouped by awarding agency and recipient and their positive obligations are summed into vendor_spend.
+
+Vendor Share Analysis
+Why: Raw dollar amounts cannot be compared fairly across agencies with very different total contract spending.
+How: Each vendor's spending is divided by the analyzed total spending of its agency.
+
+Pareto / Cumulative Share Analysis
+Why: Procurement analysts often need to know how quickly total spend accumulates among the largest suppliers.
+How: Vendors are sorted from highest to lowest spending inside each agency and vendor shares are cumulatively summed. The Pareto chart includes an 80% reference line; 80% is a diagnostic benchmark, not an assumption that every agency must follow an 80/20 rule.
+
+Herfindahl-Hirschman Index (HHI)
+Why: A single quantitative measure makes supplier concentration easier to compare across agencies.
+How: Each vendor share is squared and the squared shares are summed within the agency. Larger values mean spending is concentrated among fewer/larger suppliers. This project uses HHI descriptively for procurement concentration; it is not making an antitrust determination.
+
+Top-N Concentration Ratio
+Why: HHI can be less intuitive to a nontechnical stakeholder.
+How: The shares of the five highest-spending vendors in each agency are added to produce top5_share.
+
+Ranking
+Why: The analysis needs to identify the largest suppliers separately within every agency.
+How: Vendors are ranked by spending within awarding_agency. The SQL file demonstrates the equivalent RANK() OVER(PARTITION BY ...) approach.
+
+SQL Window Functions
+Why: Window functions calculate within-group rankings while preserving individual vendor rows.
+How: RANK() partitions records by agency and orders vendors by total spending.
+
+Risk Classification
+Why: Stakeholders may find labels easier to scan than decimal HHI values.
+How: HHI values are mapped to Low, Moderate, High, and Very High project-defined concentration bands. These labels are analytical assumptions and are not official federal procurement risk ratings.
+
+LIMITATIONS
+High vendor concentration does not automatically mean an agency has a procurement problem. Some programs require specialized suppliers or operate in naturally concentrated markets. USAspending obligations are not the same as cash outlays. Recipient-name changes or entity-resolution issues can split one supplier across records. Negative obligations/deobligations are excluded from this exercise's concentration calculation, so the metric represents concentration of positive obligations rather than net spending. A deeper version should standardize recipients using stable identifiers and compare concentration within NAICS industries and subagencies.
